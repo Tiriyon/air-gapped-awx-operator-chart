@@ -1,0 +1,37 @@
+AWX:
+  # enable use of awx-deploy template
+  enabled: true
+  name: awx
+  spec:
+    admin_user: admin
+    admin_email: "test@gmail.com"
+    admin_password_secret: custom-awx-secret-key # Added to templates
+    service_type: LoadBalancer
+    image: "localhost:5002/ansible/awx"
+    image_version: "23.4.0"
+    postgres_image: "localhost:5002/awx-operator/psql-13"
+    postgres_image_version: "13"
+    # docker.io/redis:7
+    #redis_image: "loaclhost:5002/awx-operator/redis"
+    redis_image: "localhost:5002/redis"
+    redis_image_version: "7"
+    control_plane_ee_image: "localhost:5002/ansible/awx-ee:0.6.0"
+    #control_plane_ee_image_version: "0.6.0"
+    init_container_image: "localhost:5002/ansible/awx-ee" # from task pod init container
+    init_container_image_version: "0.6.0"
+    #init_projects_container_image: "" ???
+    # kube-rbac is hardcoded in deployment-awx-operator-controller-manager.yml
+    # operator-awx image is defined in deployment-awx-operator-controller-manager.yml template (hard coded)
+
+  # configurations for external postgres instance
+  postgres:
+    enabled: false
+    host: Unset
+    port: 5678
+    dbName: Unset
+    username: admin
+    # for secret management, pass in the password independently of this file
+    # at the command line, use --set AWX.postgres.password
+    password: Unset
+    sslmode: prefer
+    type: unmanaged
